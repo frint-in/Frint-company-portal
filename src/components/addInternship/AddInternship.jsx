@@ -9,7 +9,7 @@ import Button from "@mui/material/Button";
 import { Select } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 const AddInternship = () => {
   const host = import.meta.env.VITE_HOST;

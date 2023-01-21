@@ -51,7 +51,7 @@ const Sidebar = () => {
             <path d="M21.21 15.89A10 10 0 118 2.83M22 12A10 10 0 0012 2v10z" />
           </svg>
         </Link> */}
-        <Link to="" className="app-sidebar-link">
+        {/* <Link to="" className="app-sidebar-link">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width={24}
@@ -69,7 +69,7 @@ const Sidebar = () => {
             <line x1={8} y1={2} x2={8} y2={6} />
             <line x1={3} y1={10} x2={21} y2={10} />
           </svg>
-        </Link>
+        </Link> */}
         <Link to="/settings" className="app-sidebar-link">
           <svg
             className="link-icon"

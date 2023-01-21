@@ -5,13 +5,13 @@ import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import "./editSettings.scss";
 import Button from "@mui/material/Button";
-import EditIcon from "@mui/icons-material/Edit";
 import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
 import TextField from "@mui/material/TextField";
 import { Edit } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
   updateStart,
@@ -32,38 +32,64 @@ const EditSettings = () => {
   const host = import.meta.env.VITE_HOST;
   const { currentUser } = useSelector((state) => state.user);
 
+  const [requiredUser, setRequiredUser] = useState([])
+
   const [picUploadPercentage, SetpicUploadPercentage] = useState(0);
 
   useEffect(() => {
     setFormValues({
-      CompanyName: currentUser ? currentUser.CompanyName : "",
-      Name: currentUser ? currentUser.Name : "",
-      Designation: currentUser ? currentUser.Designation : "",
-      CompanyType: currentUser ? currentUser.CompanyType : "",
-      Email: currentUser ? currentUser.Email : "",
-      WorkEmail: currentUser ? currentUser.WorkEmail : "",
-      PhoneNumber: currentUser ? currentUser.PhoneNumber : "",
-      WhatsappNumber: currentUser ? currentUser.WhatsappNumber : "",
-      Address: currentUser ? currentUser.Address : "",
-      Password: currentUser ? currentUser.Password : "",
-      profilePic: currentUser ? currentUser.profilePic : "",
-      companyLogo: currentUser ? currentUser.companyLogo : "",
+      CompanyName: requiredUser ? requiredUser.CompanyName : "",
+      Name: requiredUser ? requiredUser.Name : "",
+      Designation: requiredUser ? requiredUser.Designation : "",
+      CompanyType: requiredUser ? requiredUser.CompanyType : "",
+      Email: requiredUser ? requiredUser.Email : "",
+      WorkEmail: requiredUser ? requiredUser.WorkEmail : "",
+      PhoneNumber: requiredUser ? requiredUser.PhoneNumber : "",
+      WhatsappNumber: requiredUser ? requiredUser.WhatsappNumber : "",
+      Address: requiredUser ? requiredUser.Address : "",
+      Password: requiredUser ? requiredUser.Password : "",
+      profilePic: requiredUser ? requiredUser.profilePic : "",
+      companyLogo: requiredUser ? requiredUser.companyLogo : "",
     });
-  }, [currentUser]);
+  }, [requiredUser]);
 
   const [formValues, setFormValues] = useState({});
+  useEffect(() => {
+    const getRequiredUser = async () =>{
+      const response = await axios.get(
+        `${host}/company/info/get`,
+        {
+          headers: {
+            authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
+      setRequiredUser(response.data)
+    }
+    getRequiredUser()
+  }, [])
+  const navigate = useNavigate();
 
   const handleUpdate = async () => {
-    dispatch(updateStart);
+    // dispatch(updateStart);
     try {
       const updatedUser = await axios.put(
-        `${host}/company/update/${currentUser._id}`,
-        { ...formValues }
+        `${host}/company/info/update`,
+        { ...formValues },
+        {
+          headers: {
+            authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+        
       );
-      console.log(updatedUser);
+      // console.log(updatedUser);
+      navigate('/');
     } catch (error) {
-      dispatch(updateFailure);
+      console.log(error)
+      // dispatch(updateFailure);
     }
+    // response && navigate(0);
   };
 
   const uploadFile = (file, imgType) => {
@@ -190,6 +216,7 @@ const EditSettings = () => {
                         className="sendForm left"
                         color="error"
                         style={{ margin: 10 }}
+                        onClick={()=>navigate(-1)}
                       >
                         <ClearIcon />
                         Cancel
@@ -375,7 +402,17 @@ const EditSettings = () => {
                               <Edit />{" "}
                             </label>
                           </div>
-                          <div className="avatar-preview">
+                          {formValues.profilePic && <div className="avatar-preview">
+                            <div
+                              id="imagePreview"
+                              style={{
+                                backgroundImage: `url(${
+                                  formValues.profilePic
+                                })`,
+                              }}
+                            ></div>
+                          </div>}
+                         {! formValues.profilePic && <div className="avatar-preview">
                             <div
                               id="imagePreview"
                               style={{
@@ -386,7 +423,7 @@ const EditSettings = () => {
                                 })`,
                               }}
                             ></div>
-                          </div>
+                          </div>}
                         </div>
                       </div>
 
@@ -422,7 +459,17 @@ const EditSettings = () => {
                             </label>
                           </div>
                           <div className="avatar-preview">
-                            <div
+
+                          {formValues.companyLogo && <div
+                              id="imagePreview"
+                              style={{
+                                backgroundImage: `url(${
+                                  formValues.companyLogo
+                                })`,
+                              }}
+                            ></div>}
+                           
+                           {!formValues.companyLogo && <div
                               id="imagePreview"
                               style={{
                                 backgroundImage: `url(${
@@ -431,7 +478,7 @@ const EditSettings = () => {
                                     : "https://cdn.pixabay.com/photo/2021/10/11/23/49/building-6702046_960_720.png"
                                 })`,
                               }}
-                            ></div>
+                            ></div>}
                           </div>
                         </div>
                       </div>

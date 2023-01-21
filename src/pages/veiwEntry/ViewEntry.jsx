@@ -18,53 +18,50 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const ViewEntry = () => {
-  const host = "http://localhost:3000/api";
+  const host = import.meta.env.VITE_HOST;
+  const { currentUser } = useSelector((state) => state.user);
 
   const { internshipId } = useParams();
 
   const [requiredInternship, setRequiredInternship] = useState();
 
-  const [company, setCompany] = useState();
-
-  useEffect(() => {
-    setCompany(JSON.parse(localStorage.getItem("my-company")));
-  }, []);
 
   useEffect(() => {
     const getRequiredInternship = async () => {
       const response = await axios.get(
-        `${host}/internship/get/${company.company_id}/${internshipId}`,
+        `${host}/company/internship/find/${internshipId}`,
         {
           headers: {
-            authorization: `Bearer ${company.accessToken}`,
+            authorization: `Bearer ${currentUser.token}`,
           },
         }
       );
       setRequiredInternship(response.data);
     };
 
-    company && getRequiredInternship();
-  }, [company]);
+    getRequiredInternship();
+  }, []);
 
   const [companyName, setCompanyName] = useState();
 
   useEffect(() => {
     const getComapnyName = async () => {
       const response = await axios.get(
-        `${host}/company/get/${company.company_id}`,
+        `${host}/company/info/get`,
         {
           headers: {
-            authorization: `Bearer ${company.accessToken}`,
+            authorization: `Bearer ${currentUser.token}`,
           },
         }
       );
       setCompanyName(response.data.CompanyName)
     };
 
-    company && getComapnyName()
-  }, [company]);
+    getComapnyName()
+  }, []);
 
   const columns = [
     { id: "name", label: "Name", minWidth: 170 },
@@ -135,6 +132,9 @@ const ViewEntry = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  let numberApplicants = 0;
+  let verifiedApplicants = 0;
 
   return (
     <div className="viewEntry">
@@ -209,11 +209,11 @@ const ViewEntry = () => {
               <div className="projects-section-line">
                 <div className="projects-status">
                   <div className="item-status">
-                    <span className="status-number">45</span>
+                    <span className="status-number">{numberApplicants}</span>
                     <span className="status-type">Applicants</span>
                   </div>
                   <div className="item-status">
-                    <span className="status-number">24</span>
+                    <span className="status-number">{verifiedApplicants}</span>
                     <span className="status-type">Verified Applicants</span>
                   </div>
                   <div className="item-status"></div>
@@ -221,7 +221,9 @@ const ViewEntry = () => {
                 <div className="view-actions"></div>
               </div>
               <div className="project-boxes jsListView">
-                <Paper sx={{ width: "100%", overflow: "hidden" }}>
+                {
+                  numberApplicants > 0
+                  ? <Paper sx={{ width: "100%", overflow: "hidden" }}>
                   <TableContainer sx={{ maxHeight: 440 }}>
                     <Table stickyHeader aria-label="sticky table">
                       <TableHead>
@@ -280,7 +282,9 @@ const ViewEntry = () => {
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                   />
-                </Paper>
+                   </Paper>
+                  : <h1 style={{textAlign: "center", marginBottom: "2em"}}> No Applicants has applied yet</h1>
+                }
               </div>
             </div>
 
