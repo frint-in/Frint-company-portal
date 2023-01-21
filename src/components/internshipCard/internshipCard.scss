@@ -1,0 +1,29 @@
+    .moreInfo {
+        display: none;
+        width: 70px;
+        li {
+            list-style: none;
+        }
+    }
+
+    .showInfo {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        // background-color: #fff;
+        border-radius: 25%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: dodgerblue;
+        bottom: 1px;
+        right: 18px;
+
+        li {
+            border-bottom: 0.2px dotted dodgerblue;
+            &:hover {
+                color: blue;
+            }
+        }
+    }
