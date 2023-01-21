@@ -4,13 +4,15 @@ import "./editListing.scss";
 import axios from "axios";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import FormHelperText from "@mui/material/FormHelperText";
+// import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { ArrowBack } from "@mui/icons-material";
+import { useSelector } from "react-redux";
 
 const EditListing = () => {
-  const host = "http://localhost:3000/api";
+  const host = import.meta.env.VITE_HOST;
+  const { currentUser } = useSelector((state) => state.user);
 
   const navigate = useNavigate()
 
@@ -29,27 +31,22 @@ const EditListing = () => {
     availablePosts: "",
   };
   const [creds, setCreds] = useState(initialValues);
-  const [company, setCompany] = useState();
-
-  useEffect(() => {
-    setCompany(JSON.parse(localStorage.getItem("my-company")));
-  }, []);
 
   useEffect(() => {
     const getRequiredInternship = async () => {
       const response = await axios.get(
-        `${host}/internship/get/${company.company_id}/${internshipId}`,
+        `${host}/company/internship/find/${internshipId}`,
         {
           headers: {
-            authorization: `Bearer ${company.accessToken}`,
+            authorization: `Bearer ${currentUser.token}`,
           },
         }
       );
       setRequiredInternship(response.data);
     };
 
-    company && getRequiredInternship();
-  }, [company]);
+    getRequiredInternship();
+  }, []);
 
   useEffect(() => {
     requiredInternship &&
@@ -78,11 +75,11 @@ const EditListing = () => {
 
     const updateInternship = async () => {
       const response = axios.put(
-        `${host}/internship/update/${company.company_id}/${internshipId}`,
+        `${host}/company/internship/edit/${internshipId}`,
         creds,
         {
           headers: {
-            authorization: `Bearer ${company.accessToken}`,
+            authorization: `Bearer ${currentUser.token}`,
           },
         }
       );

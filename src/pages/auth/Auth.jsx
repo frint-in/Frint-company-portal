@@ -10,10 +10,12 @@ import { loginFailure, loginStart, loginSuccess } from "../../redux/userSlice";
 import {auth, provider} from '../../firebase'
 import { signInWithPopup } from'firebase/auth'
 
+
 const Auth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const host = import.meta.env.VITE_HOST;
+  
 
   const formButton = useRef();
 
@@ -45,8 +47,14 @@ const Auth = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const response = await axios.post(`${host}/company/register`, registerFormValues)
-    response && navigate(0)
+    dispatch(loginStart());
+    try{
+      const response = await axios.post(`${host}/auth/company/register`, registerFormValues)
+      dispatch(loginSuccess(res.data))
+    }catch(error){
+      dispatch(loginFailure());
+    }
+    // response && navigate(0)
   };
 
   // Handle Login In Functions
@@ -60,7 +68,7 @@ const Auth = () => {
     e.preventDefault();
     dispatch(loginStart());
     try {
-      const res = await axios.post(`${host}/company/login`, {
+      const res = await axios.post(`${host}/auth/company/login`, {
         ...loginFormValues,
       });
       dispatch(loginSuccess(res.data))
@@ -76,7 +84,7 @@ const Auth = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         axios
-          .post(`${host}/company/google/auth`, {
+          .post(`${host}/auth/company/google/auth`, {
             Name: result.user.displayName,
             Email: result.user.email,
             profilePic: result.user.photoURL,

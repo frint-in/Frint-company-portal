@@ -37,37 +37,17 @@ const DashBoard = () => {
   const gridView = useRef();
   const projectsList = useRef();
 
-  const [allInternships, setAllInternships] = useState([
-    {
-      title: "Software Engineer",
-      type: "full time"
-    },
-    {
-      title: "Graphics Designer",
-      type: "part time"
-    },
-    {
-      title: "Game Developer",
-      type: "full time"
-    },
-    {
-      title: "Software Maintainer",
-      type: "full time"
-    },
-    {
-      title: "SEO Developer",
-      type: "part time"
-    },
-    {
-      title: "Software Engineer",
-      type: "full time"
-    },
-  ]);
+  const [allInternships, setAllInternships] = useState([  ]);
 
   useEffect(() => {
     const getAllCompanyInternship = async () => {
-      //   const res = await axios.get(`${host}/company/all`)
-      //   console.log(res)
+        const res = await axios.get(`${host}/company/internship/all`,
+        {
+          headers: {
+            authorization: `Bearer ${currentUser.token}`,
+          },
+        })
+        setAllInternships(res.data)
     };
     currentUser && getAllCompanyInternship();
   }, [currentUser]);

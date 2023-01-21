@@ -5,13 +5,19 @@ import "./internshipCard.scss";
 import { Delete, Edit } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const InternshipCard = (props) => {
+  const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
-  const host = "http://localhost:3000/api";
+  // useEffect(() => {
+  //   console.log(internship)
+  // }, [])
+  
 
-  const [company, setCompany] = useState();
+  const host = import.meta.env.VITE_HOST;
+
 
   const { internship } = props;
 
@@ -39,18 +45,15 @@ const InternshipCard = (props) => {
     },
   ];
 
-  useEffect(() => {
-    setCompany(JSON.parse(localStorage.getItem("my-company")));
-  }, []);
 
   const handleDelete = async (e) => {
     e.preventDefault();
 
     const response = await axios.delete(
-      `${host}/internship/delete/${internship.companyId}/${internship._id}`,
+      `${host}/company/internship/delete/${internship._id}`,
       {
         headers: {
-          authorization: `Bearer ${company.accessToken}`,
+          authorization: `Bearer ${currentUser.token}`,
         },
       }
     );

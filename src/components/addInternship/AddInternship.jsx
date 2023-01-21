@@ -9,11 +9,18 @@ import Button from "@mui/material/Button";
 import { Select } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 const AddInternship = () => {
-  const host = "http://localhost:3000/api";
+  const host = import.meta.env.VITE_HOST;
+  const { currentUser } = useSelector((state) => state.user);
+
+  // useEffect(() => {
+  //   console.log(currentUser)
+  // }, []);
 
   const navigate = useNavigate();
+
 
   const initialValues = {
     title: "",
@@ -28,13 +35,13 @@ const AddInternship = () => {
   const [creds, setCreds] = useState(initialValues);
   const [company, setCompany] = useState();
 
+
   const handelSubmit = async (e) => {
     e.preventDefault();
 
     const response = await axios.post(
-      `${host}/internship/create/${company.company_id}`,
+      `${host}/company/internship/new/`,
       {
-        companyId: company.company_id,
         title: creds.title,
         type: creds.type,
         location: creds.location,
@@ -46,7 +53,7 @@ const AddInternship = () => {
       },
       {
         headers: {
-          authorization: `Bearer ${company.accessToken}`,
+          authorization: `Bearer ${currentUser.token}`,
         },
       }
     );
