@@ -10,13 +10,13 @@ echo > .nojekyll
 
 git init
 
-git checkout -b main
+git checkout -b master
 
 git add -A 
 
 commit -m "deploy"
 
 
-git push -f git@github.com:frint-in/Frint-company-portal.git main:gh-pages
+git push -f git@github.com:frint-in/Frint-company-portal.git master:gh-pages
 
 cd -
