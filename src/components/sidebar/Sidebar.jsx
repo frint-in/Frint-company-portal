@@ -1,13 +1,14 @@
-import React from "react";
 import "./sidebar.scss";
 import { Logout } from "@mui/icons-material";
 import { logout } from "../../redux/userSlice";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Sidebar = () => {
 
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -17,7 +18,7 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="app-sidebar">
-        <Link to="/" className="app-sidebar-link active">
+        <Link to="/" className={`app-sidebar-link ${location.pathname==='/' && 'active'}`}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width={24}
@@ -70,7 +71,7 @@ const Sidebar = () => {
             <line x1={3} y1={10} x2={21} y2={10} />
           </svg>
         </Link> */}
-        <Link to="/settings" className="app-sidebar-link">
+        <Link to="/settings" className={`app-sidebar-link ${location.pathname==='/settings' && 'active'}`}>
           <svg
             className="link-icon"
             xmlns="http://www.w3.org/2000/svg"

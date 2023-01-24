@@ -9,17 +9,50 @@ import { useSelector } from "react-redux";
 
 const InternshipCard = (props) => {
   const { currentUser } = useSelector((state) => state.user);
+  const host = import.meta.env.VITE_HOST;
+  const { internship } = props;
   const navigate = useNavigate();
+  const infoBtn = useRef();
 
-  // useEffect(() => {
-  //   console.log(internship)
-  // }, [])
+  const [applicantsNo, setApplicantsNo] = useState(0)
+
+  const [initialDay, SetinitialDay] = useState()
+  const [initialMonth, setInitialMonth] = useState()
+  const [initialYear, setInitialYear] = useState()
+
+  const week = ["Sun,", "Mon,", "Tue,", "Wed,", "Thurs,", "Fri,", "Sat,"];
+  const months = [
+    "January",
+    "Febrary",
+    "March",
+    "April",
+    "May",
+    "Jun",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  useEffect(() => {
+    SetinitialDay(new Date(internship.createdAt).getDate())
+    setInitialMonth(months[new Date(internship.createdAt).getMonth()])
+    setInitialYear(new Date(internship.createdAt).getFullYear())
+  }, [internship])
+  
+  const [percentageTime, setPercentageTime] = useState()
+
+  useEffect(() => {
+    let initialTimeDifference = new Date(internship.lastDate).getTime() - new Date(internship.createdAt).getTime()
+    let finalTimeDifference = new Date(internship.lastDate).getTime() - new Date().getTime()
+    let initialSeconds = Math.floor((initialTimeDifference) / 1000);
+    let finalSeconds = Math.floor((finalTimeDifference) / 1000)
+    setPercentageTime(((initialSeconds - finalSeconds)/initialSeconds)*100)
+  }, [internship])
   
 
-  const host = import.meta.env.VITE_HOST;
-
-
-  const { internship } = props;
 
   const [color, setColor] = useState([
     "#fee4cb",
@@ -61,18 +94,18 @@ const InternshipCard = (props) => {
     response && navigate(0);
   };
 
-  const infoBtn = useRef();
+
 
   return (
     <div className="project-box-wrapper">
-      <div
+      {(percentageTime <=100 && percentageTime>=0)&&(<div
         className="project-box"
         style={{
           backgroundColor: color[Math.floor(Math.random() * color.length)],
         }}
       >
         <div className="project-box-header">
-          <span>December 10, 2020</span>
+          <span>{initialMonth} {initialDay}, {initialYear}</span>
           <div className="more-wrapper">
             <button
               className="project-btn-more"
@@ -100,11 +133,11 @@ const InternshipCard = (props) => {
             <ul className="moreInfo" ref={infoBtn}>
             <li>
                
-               <Link to={`/viewEntry/${internship._id}`} style={{textDecoration: 'none'}}>More Info</Link>
+               <Link to={`/viewEntry/${internship._id}`} style={{textDecoration: 'none' , margin: '8px'}}>More Info</Link>
            </li>
               <li>
                
-                  <Link to={`/editListing/${internship._id}`} style={{textDecoration: 'none'}}>Edit Listing</Link>
+                  <Link to={`/editListing/${internship._id}`} style={{textDecoration: 'none' , margin: '4px'}}>Edit Listing</Link>
               </li>
             </ul>
           </div>
@@ -120,14 +153,14 @@ const InternshipCard = (props) => {
           </p>
         </div>
         <div className="box-progress-wrapper">
-          <p className="box-progress-header">Progress</p>
+          <p className="box-progress-header">Time Remaining</p>
           <div className="box-progress-bar">
             <span
               className="box-progress"
-              style={{ width: "60%", backgroundColor: "#ff942e" }}
+              style={{ width: `${percentageTime}%`, backgroundColor: "#ff942e" }}
             />
           </div>
-          <p className="box-progress-percentage">60%</p>
+          <p className="box-progress-percentage">{~~percentageTime}%</p>
         </div>
         <div className="project-box-footer">
           <div className="participants">
@@ -169,10 +202,10 @@ const InternshipCard = (props) => {
             </button>
           </div>
           <div className="days-left" style={{ color: "#ff942e" }}>
-            2 Days Left
+            {applicantsNo} Applicants
           </div>
         </div>
-      </div>
+      </div>)}
     </div>
   );
 };

@@ -89,6 +89,7 @@ const EditListing = () => {
     response && navigate('/')
   };
 
+
   return (
     <div className="editListing">
       <Link to="/" className="back-btn">
@@ -181,6 +182,7 @@ const EditListing = () => {
               onChange={(e) => setCreds({ ...creds, perks: e.target.value })}
             />
           </div>
+         
           <div className="textarea-group">
             <label htmlFor="requirements">Requirements</label>
             <textarea
@@ -193,6 +195,18 @@ const EditListing = () => {
             />
           </div>
           <div className="button-container">
+             <div className="date-picker" style={{display: 'flex'}}>
+            <label htmlFor="dateSelector" className="dateSelector">Deadline</label>
+            <input type="date" className="dateSelector"
+             value={new Date(creds.lastDate)}
+             onChange={(e) =>
+               setCreds({
+                 ...creds,
+                 lastDate: e.target.value,
+               })
+             }
+             />
+          </div>
             <button className="button">Update Now</button>
           </div>
         </form>

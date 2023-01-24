@@ -1,5 +1,5 @@
 import React from "react";
-import { useRef, useState, useEffect } from "react";
+import {  useState, useEffect } from "react";
 import AddInternship from "../../components/addInternship/AddInternship";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
@@ -13,11 +13,6 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import {
-  updateStart,
-  updateSuccess,
-  updateFailure,
-} from "../../redux/userSlice";
 import {
   getStorage,
   ref,
@@ -260,7 +255,6 @@ const EditSettings = () => {
                       <div className="fieldName">Name :</div>
                       <div className="fieldValue">
                         <TextField
-                          id="standard-basic"
                           variant="standard"
                           value={formValues && formValues.Name}
                           onChange={(e) => {
@@ -278,7 +272,6 @@ const EditSettings = () => {
                       <div className="fieldName">Designation :</div>
                       <div className="fieldValue">
                         <TextField
-                          id="standard-basic"
                           variant="standard"
                           value={formValues && formValues.Designation}
                           onChange={(e) => {
@@ -296,7 +289,6 @@ const EditSettings = () => {
                       <div className="fieldName">Company Type :</div>
                       <div className="fieldValue">
                         <TextField
-                          id="standard-basic"
                           variant="standard"
                           value={formValues && formValues.CompanyType}
                           onChange={(e) => {
@@ -317,7 +309,6 @@ const EditSettings = () => {
                       <div className="fieldName">Email :</div>
                       <div className="fieldValue">
                         <TextField
-                          id="standard-basic"
                           variant="standard"
                           value={formValues && formValues.Email}
                           onChange={(e) => {
@@ -335,7 +326,6 @@ const EditSettings = () => {
                       <div className="fieldName">WorkEmail :</div>
                       <div className="fieldValue">
                         <TextField
-                          id="standard-basic"
                           variant="standard"
                           value={formValues && formValues.WorkEmail}
                           onChange={(e) => {
@@ -353,7 +343,6 @@ const EditSettings = () => {
                       <div className="fieldName">PhoneNumber :</div>
                       <div className="fieldValue">
                         <TextField
-                          id="standard-basic"
                           variant="standard"
                           value={formValues && formValues.PhoneNumber}
                           onChange={(e) => {
@@ -371,7 +360,6 @@ const EditSettings = () => {
                       <div className="fieldName">WhatsappNumber :</div>
                       <div className="fieldValue">
                         <TextField
-                          id="standard-basic"
                           variant="standard"
                           value={formValues && formValues.WhatsappNumber}
                           onChange={(e) => {
@@ -500,7 +488,6 @@ const EditSettings = () => {
                     <h2 className="settings-title">Password</h2>
                     <form className="form my-form formCenterContainer">
                       <TextField
-                        id="filled-password-input"
                         label="New password"
                         type="password"
                         autoComplete="text-password"
@@ -508,7 +495,6 @@ const EditSettings = () => {
                         style={{ margin: 10 }}
                       />
                       <TextField
-                        id="filled-password-input"
                         label="Re-Enter password"
                         type="password"
                         autoComplete="text-password"

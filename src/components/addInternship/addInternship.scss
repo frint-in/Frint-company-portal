@@ -205,6 +205,13 @@ $BP: 35em;
         transition: width .5s ease, height .5s ease .5s;
       }
     }
+
+    #dateSelector{
+      margin: 20px 0;
+      border: none;
+      background-color: rgb(243,246,253);
+      outline: none;
+    }
     
     .showFormLabel {
       cursor: pointer;

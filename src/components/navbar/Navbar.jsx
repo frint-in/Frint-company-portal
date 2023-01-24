@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./navbar.scss";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 const Navbar = () => {
-
+  const host = import.meta.env.VITE_HOST;
   const { currentUser } = useSelector((state) => state.user);
+  const [requiredUser, setRequiredUser] = useState([])
+  useEffect(() => {
+    const getRequiredUser = async () =>{
+      const response = await axios.get(
+        `${host}/company/info/get`,
+        {
+          headers: {
+            authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
+      setRequiredUser(response.data)
+    }
+    getRequiredUser()
+  }, [])
 
   return (
     <div className="navbar">
@@ -113,8 +129,8 @@ const Navbar = () => {
             </svg>
           </button> */}
           <button className="profile-btn">
-            <img src="https://assets.codepen.io/3306515/IMG_2025.jpg" />
-            <span>Aybüke C.</span>
+            <img src={`${requiredUser.companyLogo ? requiredUser.companyLogo : (requiredUser.profilePic ? requiredUser.profilePic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png')}`} />
+            <span>{requiredUser.CompanyName ? requiredUser.CompanyName : requiredUser.Name}</span>
           </button>
         </div>
         {/* <button

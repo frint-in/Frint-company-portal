@@ -4,11 +4,13 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+  height: 100vh;
 
 
   .back-btn{
     position: relative;
-    bottom: 14rem;
+    bottom: 10rem;
+    left: 6rem;
     cursor: pointer;
   }
 
@@ -126,22 +128,30 @@
   .button:focus {
     background: #4239e8;
   }
+}
   
   @media screen and (min-width: 768px) {
     body {
       align-items: center;
       justify-content: center;
     }
-  
+    .editListing .back-btn{
+      bottom: 26rem;
+      left: 6rem;
+    }
+  .editListing{
     .container {
       margin: 2rem;
+      margin-top: 5rem;
       box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
       border-radius: 4px;
       max-width: 32rem;
       padding: 2rem;
     }
   }
+}
   @media screen and (min-width: 1024px) {
+    .editListing{
     .container {
       max-width: 80%;
       width: 100%;
@@ -178,15 +188,23 @@
     }
   
     .button-container {
+      display: flex;
       text-align: right;
+      align-items: center;
+      justify-content: center;
+
+      .dateSelector{
+        margin: 10px;
+        width: 130px;
+        border: none;
+        // background-color: rgb(243,246,253);
+        outline: none;
+      }
     }
   
     .button {
-      /* bon, bon, bon
-      c'est pas tout mais j'ai faim moi ^^
-      */
-      width: auto;
+      margin: 30px;
+      width: 200px;
     }
   }
-  
-}
+  }

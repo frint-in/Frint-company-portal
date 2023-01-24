@@ -11,6 +11,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
+
 const AddInternship = () => {
   const host = import.meta.env.VITE_HOST;
   const { currentUser } = useSelector((state) => state.user);
@@ -21,10 +22,10 @@ const AddInternship = () => {
 
   const navigate = useNavigate();
 
-
   const initialValues = {
     title: "",
     type: "",
+    lastDate: "",
     location: "",
     description: "",
     requirements: "",
@@ -34,7 +35,6 @@ const AddInternship = () => {
   };
   const [creds, setCreds] = useState(initialValues);
   const [company, setCompany] = useState();
-
 
   const handelSubmit = async (e) => {
     e.preventDefault();
@@ -89,7 +89,10 @@ const AddInternship = () => {
                 })
               }
             />
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+            <FormControl
+              variant="standard"
+              sx={{ m: 1, width: 120 }}
+            >
               <InputLabel id="demo-simple-select-standard-label">
                 Type
               </InputLabel>
@@ -111,6 +114,22 @@ const AddInternship = () => {
                 <MenuItem value="Part-Time">Part-Time</MenuItem>
                 <MenuItem value="Full-Time">Full-Time</MenuItem>title
               </Select>
+
+
+
+             <input type="date" id="dateSelector"
+             value={creds.lastDate}
+             onChange={(e) =>
+               setCreds({
+                 ...creds,
+                 lastDate: e.target.value,
+               })
+             }
+             />
+
+
+
+             
             </FormControl>
             <input
               type="text"
@@ -194,13 +213,10 @@ const AddInternship = () => {
           <Button variant="outlined" type="submit" className="sendForm left">
             Submit
           </Button>
-         
-            <label htmlFor="showForm" className="closeFormLabel left label">
 
-              Close
-
-            </label>
-
+          <label htmlFor="showForm" className="closeFormLabel left label">
+            Close
+          </label>
         </form>
       </div>
     </div>

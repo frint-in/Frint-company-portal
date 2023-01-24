@@ -7,15 +7,18 @@ import Alert from "@mui/material/Alert";
 import { Facebook, GitHub, Google } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { loginFailure, loginStart, loginSuccess } from "../../redux/userSlice";
-import {auth, provider} from '../../firebase'
-import { signInWithPopup } from'firebase/auth'
-
+import { auth, provider } from "../../firebase";
+import { signInWithPopup } from "firebase/auth";
 
 const Auth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const host = import.meta.env.VITE_HOST;
-  
+
+  const [alert, setAlert] = useState({
+    type: '',
+    message: ''
+})
 
   const formButton = useRef();
 
@@ -47,14 +50,22 @@ const Auth = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    dispatch(loginStart());
-    try{
-      const response = await axios.post(`${host}/auth/company/register`, registerFormValues)
-      dispatch(loginSuccess(res.data))
-    }catch(error){
-      dispatch(loginFailure());
+    try {
+      const response = await axios.post(
+        `${host}/auth/company/register`,
+        registerFormValues
+      );
+    } catch (error) {
+      setAlert({
+        type: 'error',
+        message: 'Failed to register'
+      })
     }
-    // response && navigate(0)
+    setAlert({
+      type: 'success',
+      message: 'Thank You for registering'
+    })
+    setTimeout(navigate(0), 1000);
   };
 
   // Handle Login In Functions
@@ -71,8 +82,16 @@ const Auth = () => {
       const res = await axios.post(`${host}/auth/company/login`, {
         ...loginFormValues,
       });
-      dispatch(loginSuccess(res.data))
+      setAlert({
+        type: 'success',
+        message: 'Login Successful'
+      })
+      dispatch(loginSuccess(res.data));
     } catch (error) {
+      setAlert({
+        type: 'error',
+        message: 'Failed to Login'
+      })
       dispatch(loginFailure());
     }
   };
@@ -92,7 +111,7 @@ const Auth = () => {
           .then((res) => {
             // console.log(res)
             dispatch(loginSuccess(res.data));
-            navigate("/")
+            navigate("/");
           });
       })
       .catch((error) => {
@@ -102,9 +121,12 @@ const Auth = () => {
 
   return (
     <>
-      {/* <Alert severity="error">This is an error alert — check it out!</Alert>
-      <Alert severity="success">This is a success alert — check it out!</Alert> */}
       <div className="auth">
+        {alert.type && <Alert severity={alert.type}>{alert.message}</Alert>}
+          {/* <Alert severity="error">This is an error alert — check it out!</Alert> */}
+          {/* <Alert severity="success">
+            This is a success alert — check it out!
+          </Alert> */}
         <section className="user">
           <div className="user_options-container">
             <div className="user_options-text">

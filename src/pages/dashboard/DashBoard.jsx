@@ -70,19 +70,19 @@ const DashBoard = () => {
               <div className="projects-section-line">
                 <div className="projects-status">
                   <div className="item-status">
-                    <span className="status-number">45</span>
+                    <span className="status-number">{allInternships ? allInternships.length : 0}</span>
                     <span className="status-type">Active Internships</span>
                   </div>
                   <div className="item-status">
-                    <span className="status-number">24</span>
+                    <span className="status-number">0</span>
                     <span className="status-type">Candidates Applied</span>
                   </div>
                   <div className="item-status">
-                    <span className="status-number">62</span>
+                    <span className="status-number">{allInternships ? allInternships.length : 0}</span>
                     <span className="status-type">Total Internships</span>
                   </div>
                   <div className="item-status">
-                    <span className="status-number">62</span>
+                    <span className="status-number">0</span>
                     <span className="status-type">Total Interns Hired</span>
                   </div>
 
