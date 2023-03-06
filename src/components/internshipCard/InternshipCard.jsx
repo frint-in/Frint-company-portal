@@ -98,7 +98,8 @@ const InternshipCard = (props) => {
 
   return (
     <div className="project-box-wrapper">
-      {(percentageTime <=100 && percentageTime>=0)&&(<div
+      {/* {(percentageTime <=100 && percentageTime>=0)&&( */}
+      <div
         className="project-box"
         style={{
           backgroundColor: color[Math.floor(Math.random() * color.length)],
@@ -205,7 +206,8 @@ const InternshipCard = (props) => {
             {applicantsNo} Applicants
           </div>
         </div>
-      </div>)}
+      </div>
+       {/* )} */}
     </div>
   );
 };

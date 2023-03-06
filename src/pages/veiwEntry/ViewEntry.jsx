@@ -136,6 +136,43 @@ const ViewEntry = () => {
   let numberApplicants = 0;
   let verifiedApplicants = 0;
 
+  const [applicants, setApplicants] = useState()
+  const [applicantIds, setApplicantIds] = useState([])
+
+  useEffect(() => {
+    const getRequiredApplicants = async () => {
+      const res = await axios.get(`${host}/company/info/applicants/${internshipId}`,
+      {
+        headers: {
+          authorization: `Bearer ${currentUser.token}`,
+        },
+      })
+      setApplicants(res.data)
+      // res.data && res.data.map(data => {
+      //   setApplicants([...applicants, data.applicantId]);
+      //   console.log(1)
+      // })
+    }
+    getRequiredApplicants()
+  }, [internshipId, currentUser])
+
+  useEffect(() => {
+    applicants && applicants.map(data => {
+      setApplicantIds([...applicantIds, data.applicantId])
+    })
+  }, [applicants])
+  
+  useEffect(() => {
+    const getAppliedInterns = async () => {
+      const res = await axios.get(`${host}/company/info/getAppliedInterns`, {applicantIds})
+      console.log(res)
+    }
+    applicantIds && getAppliedInterns()
+  }, [applicantIds])
+  
+
+  
+
   return (
     <div className="viewEntry">
       <AddInternship />
@@ -287,8 +324,6 @@ const ViewEntry = () => {
                 }
               </div>
             </div>
-
-            {/* </div> */}
           </div>
         </div>
       </div>

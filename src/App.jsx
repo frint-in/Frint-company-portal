@@ -1,10 +1,6 @@
 import "./App.css";
-import Navbar from "./components/navbar/Navbar";
-import Sidebar from "./components/sidebar/Sidebar";
 import Auth from "./pages/auth/Auth";
-import Calender from "./pages/calender/Calender";
 import DashBoard from "./pages/dashboard/DashBoard";
-import Settings from "./pages/settings/Settings";
 import EditSettings from "./pages/editSettings/EditSettings";
 import ViewEntry from "./pages/veiwEntry/ViewEntry";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
@@ -24,9 +20,9 @@ function App() {
             path="/auth"
             element={currentUser ? <Navigate to="/" replace /> : <Auth />}
           />
-          <Route path="/editListing/:internshipId" element={<EditListing />} />
-          <Route path="/viewEntry/:internshipId" element={<ViewEntry />} />
-          <Route path="/settings" element={<EditSettings />} />
+          <Route path="/editListing/:internshipId" element={currentUser ? <EditListing /> : <Auth />} />
+          <Route path="/viewEntry/:internshipId" element={currentUser ? <ViewEntry />  : <Auth /> } />
+          <Route path="/settings" element={currentUser ?  <EditSettings /> : <Auth />} />
         </Routes>
       </BrowserRouter>
       ,
