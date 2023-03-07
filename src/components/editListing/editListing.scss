@@ -1,16 +1,16 @@
-.editListing{
-	background: #f2f2f2;
-	font-family: "Roboto", sans-serif;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+.editListing {
+  background: #f2f2f2;
+  font-family: "Roboto", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 100vh;
+  margin-top: 20px;
 
-
-  .back-btn{
-    position: relative;
-    bottom: 10rem;
-    left: 6rem;
+  .back-btn {
+    position: absolute;
+    top: 10rem;
+    left: 10em;
     cursor: pointer;
   }
 
@@ -19,7 +19,7 @@
     width: 100%;
     padding: 1rem;
   }
-  
+
   .title {
     font-size: 24px;
     line-height: 28px;
@@ -28,13 +28,13 @@
     padding-bottom: 11px;
     border-bottom: 1px solid #d7dbdf;
   }
-  
+
   .form-group {
     margin-top: 25px;
     display: flex;
     flex-direction: column;
   }
-  
+
   .textarea-group label,
   .form-group label {
     color: #374151;
@@ -42,7 +42,7 @@
     line-height: 19px;
     margin-bottom: 10px;
   }
-  
+
   .form-group [type],
   .textarea-group textarea {
     border: 1px solid #d2d6db;
@@ -57,26 +57,26 @@
   .textarea-group textarea:focus {
     border-color: #5850eb;
   }
-  
+
   .textarea-group {
     margin-top: 24px;
   }
-  
+
   .textarea-group textarea {
     resize: none;
     width: 100%;
     margin-top: 10px;
     height: calc(100% - 59px);
   }
-  
+
   .checkbox-group {
     margin-top: 25px;
   }
-  
+
   .checkbox-group label {
     display: flex;
   }
-  
+
   .checkbox-group label::before {
     content: "\0020";
     display: flex;
@@ -89,7 +89,7 @@
     border-radius: 6px;
     transition: background 0.1s ease-in;
   }
-  
+
   .checkbox-group input[type="checkbox"] {
     /* ici on ne doit pas mettre de display: none afin de pouvoir "tabber" */
     position: absolute;
@@ -110,7 +110,7 @@
     background: #5850eb;
     border-color: #5850eb;
   }
-  
+
   .button {
     font-weight: bold;
     line-height: 19px;
@@ -129,71 +129,51 @@
     background: #4239e8;
   }
 }
-  
-  @media screen and (min-width: 768px) {
-    body {
-      align-items: center;
-      justify-content: center;
-    }
-    .editListing .back-btn{
-      bottom: 26rem;
-      left: 6rem;
-    }
-  .editListing{
-    .container {
-      margin: 2rem;
-      margin-top: 5rem;
-      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
-      border-radius: 4px;
-      max-width: 32rem;
-      padding: 2rem;
-    }
-  }
-}
-  @media screen and (min-width: 1024px) {
-    .editListing{
+
+@media screen and (max-width: 1500px) and (min-width: 768px) {
+  .editListing {
     .container {
       max-width: 80%;
       width: 100%;
     }
-  
+
     .checkboxes {
       display: flex;
     }
     .checkboxes > :not(:first-child) {
       margin-left: 1rem;
     }
-  
+
     .grid {
       display: grid;
       grid-gap: 24px;
       grid-template-columns: 1fr 1fr 1fr;
       grid-auto-rows: 1fr;
     }
-  
+
     .email-group {
       grid-column: 1;
       grid-row: 2;
     }
-  
+
     .phone-group {
       grid-column: 2;
       grid-row: 2;
     }
-  
+
     .textarea-group {
       grid-column: 3;
       grid-row: span 2;
       margin-right: 2rem;
     }
-  
+
     .button-container {
       display: flex;
       text-align: right;
       align-items: center;
       justify-content: center;
 
-      .dateSelector{
+      .dateSelector {
         margin: 10px;
         width: 130px;
         border: none;
@@ -201,10 +181,42 @@
         outline: none;
       }
     }
-  
+
     .button {
       margin: 30px;
       width: 200px;
     }
   }
+}
+
+@media screen and (max-width: 765px) {
+  .editListing {
+    margin-top: 12em;
+
+    .back-btn {
+      left: 1em;
+      top: 4rem;
+    }
   }
+}
+
+//   @media screen and (max-width: 768px)  {
+//     body {
+//       align-items: center;
+//       justify-content: center;
+//     }
+//     .editListing .back-btn{
+//       bottom: 15rem;
+//       left: 6rem;
+//     }
+//   .editListing{
+//     .container {
+//       margin: 2rem;
+//       margin-top: 5rem;
+//       box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+//       border-radius: 4px;
+//       max-width: 32rem;
+//       padding: 2rem;
+//     }
+//   }
+// }

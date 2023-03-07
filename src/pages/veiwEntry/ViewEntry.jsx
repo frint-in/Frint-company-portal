@@ -28,7 +28,6 @@ const ViewEntry = () => {
 
   const [requiredInternship, setRequiredInternship] = useState();
 
-
   useEffect(() => {
     const getRequiredInternship = async () => {
       const response = await axios.get(
@@ -49,58 +48,72 @@ const ViewEntry = () => {
 
   useEffect(() => {
     const getComapnyName = async () => {
-      const response = await axios.get(
-        `${host}/company/info/get`,
-        {
-          headers: {
-            authorization: `Bearer ${currentUser.token}`,
-          },
-        }
-      );
-      setCompanyName(response.data.CompanyName)
+      const response = await axios.get(`${host}/company/info/get`, {
+        headers: {
+          authorization: `Bearer ${currentUser.token}`,
+        },
+      });
+      setCompanyName(response.data.CompanyName);
     };
 
-    getComapnyName()
+    getComapnyName();
   }, []);
 
   const columns = [
-    { id: "name", label: "Name", minWidth: 170 },
-    { id: "college", label: "College", minWidth: 100 },
-    { id: "course", label: "Course", minWidth: 100 },
-    { id: "academicStatus", label: "Academic Status", minWidth: 100 },
-    { id: "phoneNumber", label: "Phone Number", minWidth: 100 },
-    { id: "email", label: "Email", minWidth: 100 },
-    { id: "resume", label: "Resume", minWidth: 100 },
-    { id: "view", label: "View Profile", minWidth: 100 },
+    { id: "Name", label: "Name", minWidth: 170 },
+    { id: "CollegeName", label: "College", minWidth: 100 },
+    { id: "Degree", label: "Degree", minWidth: 100 },
+    { id: "Branch", label: "Branch", minWidth: 100 },
+    { id: "Semester", label: "Semester", minWidth: 100 },
+    { id: "Email", label: "Email", minWidth: 100 },
+    { id: "PhoneNumber", label: "Phone Number", minWidth: 100 },
+    { id: "CV", label: "CV", minWidth: 100 },
+    { id: "Location", label: "Location", minWidth: 100 },
+    { id: "skillSets", label: "skillSets", minWidth: 100 },
+    { id: "currentlyWorkingAs", label: "Currently Working As", minWidth: 100 },
   ];
 
   function createData(
-    name,
-    college,
-    course,
-    academicStatus,
-    phoneNumber,
-    email,
-    resume,
-    view
+    Name,
+    CollegeName,
+    Degree,
+    Branch,
+    Semester,
+    Email,
+    PhoneNumber,
+    CV,
+    Location,
+    skillSets,
+    currentlyWorkingAs
   ) {
     return {
-      name,
-      college,
-      course,
-      academicStatus,
-      phoneNumber,
-      email,
-      resume,
-      view,
+      Name,
+      CollegeName,
+      Degree,
+      Branch,
+      Semester,
+      Email,
+      PhoneNumber,
+      CV,
+      Location,
+      skillSets,
+      currentlyWorkingAs
     };
   }
 
-  const rows = [
-    createData("India", "IN", 1324171354, 3287263),
-    createData("China", "CN", 1403500365, 9596961),
-    createData("Italy", "IT", 60483973, 301340),
-  ];
+  // useEffect(() => {
+    
+  // }, [applicantDetails])
+  
+  // const rows = [
+    // applicantDetails &&{
+    //   createData("India", "IN", 1324171354, 3287263),
+    //   createData("China", "CN", 1403500365, 9596961),
+    //   createData("Italy", "IT", 60483973, 301340),
+    // }
+  // ];
+
+  const [rows, setRows] = useState([])
 
   // Handle
   const week = ["Sun,", "Mon,", "Tue,", "Wed,", "Thurs,", "Fri,", "Sat,"];
@@ -133,45 +146,57 @@ const ViewEntry = () => {
     setPage(0);
   };
 
-  let numberApplicants = 0;
+  const [numberApplicants, setNumberApplicants] = useState(0)
   let verifiedApplicants = 0;
 
-  const [applicants, setApplicants] = useState()
-  const [applicantIds, setApplicantIds] = useState([])
+  const [applicants, setApplicants] = useState();
+  const [applicantIds, setApplicantIds] = useState([]);
+  const [applicantDetails, setApplicantDetails] = useState([])
 
   useEffect(() => {
     const getRequiredApplicants = async () => {
-      const res = await axios.get(`${host}/company/info/applicants/${internshipId}`,
-      {
-        headers: {
-          authorization: `Bearer ${currentUser.token}`,
-        },
-      })
-      setApplicants(res.data)
+      const res = await axios.get(
+        `${host}/company/info/applicants/${internshipId}`,
+        {
+          headers: {
+            authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
+      // console.log(res.data)
+      setApplicants(res.data);
       // res.data && res.data.map(data => {
       //   setApplicants([...applicants, data.applicantId]);
       //   console.log(1)
       // })
-    }
-    getRequiredApplicants()
-  }, [internshipId, currentUser])
+    };
+    getRequiredApplicants();
+  }, [internshipId, currentUser]);
+
 
   useEffect(() => {
-    applicants && applicants.map(data => {
-      setApplicantIds([...applicantIds, data.applicantId])
-    })
-  }, [applicants])
-  
-  useEffect(() => {
-    const getAppliedInterns = async () => {
-      const res = await axios.get(`${host}/company/info/getAppliedInterns`, {applicantIds})
-      console.log(res)
+    applicants &&
+      applicants.map((data) => {
+        setApplicantIds([...applicantIds, data.applicantId]);
+      });
+    // applicants.map(String)
+  }, [applicants]);
+
+
+  useEffect(() => { 
+    const getApplicants = async () => {
+      const response = await axios.post(`${host}/company/info/getAppliedInterns`, {applicantIds: applicantIds})
+      setApplicantDetails(response.data)
+      setRows(response.data)
+      setNumberApplicants(response.data.length)
+      console.log(response.data)
     }
-    applicantIds && getAppliedInterns()
+
+    applicantIds.length!==0 && getApplicants()
   }, [applicantIds])
   
-
   
+
 
   return (
     <div className="viewEntry">
@@ -183,7 +208,10 @@ const ViewEntry = () => {
             <Sidebar />
             <div className="projects-section">
               <div className="projects-section-header">
-                <p>{requiredInternship && requiredInternship.title} {companyName ? `@ ${companyName}` : ''}</p>
+                <p>
+                  {requiredInternship && requiredInternship.title}{" "}
+                  {companyName ? `@ ${companyName}` : ""}
+                </p>
                 <p className="time">{`${day} ${new Date().getDate()} ${month} ${new Date().getFullYear()}`}</p>
               </div>
               <hr />
@@ -258,70 +286,73 @@ const ViewEntry = () => {
                 <div className="view-actions"></div>
               </div>
               <div className="project-boxes jsListView">
-                {
-                  numberApplicants > 0
-                  ? <Paper sx={{ width: "100%", overflow: "hidden" }}>
-                  <TableContainer sx={{ maxHeight: 440 }}>
-                    <Table stickyHeader aria-label="sticky table">
-                      <TableHead>
-                        <TableRow>
-                          {columns.map((column) => (
-                            <TableCell
-                              key={column.id}
-                              align={column.align}
-                              style={{ minWidth: column.minWidth }}
-                            >
-                              {column.label}
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {rows
-                          .slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage
-                          )
-                          .map((row) => {
-                            return (
-                              <TableRow
-                                hover
-                                role="checkbox"
-                                tabIndex={-1}
-                                key={row.code}
+                {numberApplicants > 0 ? (
+                  <Paper sx={{ width: "100%", overflow: "hidden" }}>
+                    <TableContainer sx={{ maxHeight: 440 }}>
+                      <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                          <TableRow>
+                            {columns.map((column) => (
+                              <TableCell
+                                key={column.id}
+                                align={column.align}
+                                style={{ minWidth: column.minWidth }}
                               >
-                                {columns.map((column) => {
-                                  const value = row[column.id];
-                                  return (
-                                    <TableCell
-                                      key={column.id}
-                                      align={column.align}
-                                    >
-                                      {column.format &&
-                                      typeof value === "number"
-                                        ? column.format(value)
-                                        : value}
-                                    </TableCell>
-                                  );
-                                })}
-                              </TableRow>
-                            );
-                          })}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                  <TablePagination
-                    rowsPerPageOptions={[10, 25, 100]}
-                    component="div"
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />
-                   </Paper>
-                  : <h1 style={{textAlign: "center", marginBottom: "2em"}}> No Applicants has applied yet</h1>
-                }
+                                {column.label}
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {rows
+                            .slice(
+                              page * rowsPerPage,
+                              page * rowsPerPage + rowsPerPage
+                            )
+                            .map((row) => {
+                              return (
+                                <TableRow
+                                  hover
+                                  role="checkbox"
+                                  tabIndex={-1}
+                                  key={row.code}
+                                >
+                                  {columns.map((column) => {
+                                    const value = row[column.id];
+                                    return (
+                                      <TableCell
+                                        key={column.id}
+                                        align={column.align}
+                                      >
+                                        {column.format &&
+                                        typeof value === "number"
+                                          ? column.format(value)
+                                          : value}
+                                      </TableCell>
+                                    );
+                                  })}
+                                </TableRow>
+                              );
+                            })}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                    <TablePagination
+                      rowsPerPageOptions={[10, 25, 100]}
+                      component="div"
+                      count={rows.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                  </Paper>
+                ) : (
+                  <h1 style={{ textAlign: "center", marginBottom: "2em" }}>
+                    {" "}
+                    No Applicants has applied yet
+                  </h1>
+                )}
               </div>
             </div>
           </div>

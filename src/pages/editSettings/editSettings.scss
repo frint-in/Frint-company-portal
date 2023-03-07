@@ -834,3 +834,30 @@
   align-items: center;
   justify-content: center;
 }
+
+
+
+
+@media screen and (max-width: 615px) {
+  .editSettings{
+    .page-title{
+      flex-direction: column;
+      // font-size: 0.5em;
+    }
+    .non-active-form{
+      flex-direction: column;
+      
+      .fieldName{
+        margin: 5px;
+        text-align: center;
+      }
+      .fieldValue{
+        text-align: center;
+      }
+    }
+    .settings-title{
+      margin-bottom: 20px;
+      text-align: center;
+    }
+  }
+}
