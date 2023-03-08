@@ -189,7 +189,7 @@ const ViewEntry = () => {
       setApplicantDetails(response.data)
       setRows(response.data)
       setNumberApplicants(response.data.length)
-      console.log(response.data)
+      // console.log(response.data)
     }
 
     applicantIds.length!==0 && getApplicants()
