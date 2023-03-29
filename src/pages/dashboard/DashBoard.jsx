@@ -10,10 +10,13 @@ import NotificationCard from "../../components/notificationCard/NotificationCard
 import Sidebar from "../../components/sidebar/Sidebar";
 import "./dashboard.scss";
 import { useSelector } from "react-redux";
+import Loader from "../../components/loader/Loader";
 
 const DashBoard = () => {
   const host = import.meta.env.VITE_HOST;
   const { currentUser } = useSelector((state) => state.user);
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const week = ["Sun,", "Mon,", "Tue,", "Wed,", "Thurs,", "Fri,", "Sat,"];
   const day = week[new Date().getDay()];
@@ -37,7 +40,7 @@ const DashBoard = () => {
   const gridView = useRef();
   const projectsList = useRef();
 
-  const [allInternships, setAllInternships] = useState([  ]);
+  const [allInternships, setAllInternships] = useState([]);
 
   useEffect(() => {
     const getAllCompanyInternship = async () => {
@@ -52,10 +55,67 @@ const DashBoard = () => {
     currentUser && getAllCompanyInternship();
   }, [currentUser]);
 
+
+  const updateInternship = async (internshipId, boolValue) => {
+    const response = axios.put(
+      `${host}/company/internship/edit/${internshipId}`,
+      {isActive: boolValue},
+      {
+        headers: {
+          authorization: `Bearer ${currentUser.token}`,
+        },
+      }
+    );
+    return response
+  };
+
+  useEffect(() => {
+    allInternships.map((internship) => {
+      if(new Date(internship.lastDate) < new Date()){
+        if(internship.isActive === true){
+          updateInternship(internship._id, false)
+          // console.log('working 1')
+        }
+      }
+      else{
+        if(internship.isActive === false){
+          updateInternship(internship._id, true)
+          // console.log('working')
+        }
+      }
+    })
+  }, [allInternships])
+
+  const [activeInternships, setActiveInternships] = useState([]);
+
+  useEffect(() => {
+    const getAllCompanyInternship = async () => {
+      setIsLoading(true)
+        const res = await axios.get(`${host}/company/internship/active/all`,
+        {
+          headers: {
+            authorization: `Bearer ${currentUser.token}`,
+          },
+        })
+        setActiveInternships(res.data)
+        setIsLoading(false)
+    };
+    currentUser && getAllCompanyInternship();
+  }, [currentUser]);
+
+
+  // useEffect(() => {
+  //   activeInternships ? setIsLoading(false): setIsLoading(true)
+  // }, [activeInternships])
+  
+  
+
   return (
     <>
-      {/* <EditListing /> */}
-      <AddInternship />
+    {
+      isLoading ? ( <Loader />) : (
+<> 
+<AddInternship />
       <div className="dashboard">
         <div className="app-container">
           <Navbar />
@@ -70,7 +130,7 @@ const DashBoard = () => {
               <div className="projects-section-line">
                 <div className="projects-status">
                   <div className="item-status">
-                    <span className="status-number">{allInternships ? allInternships.length : 0}</span>
+                    <span className="status-number">{activeInternships ? activeInternships.length : 0}</span>
                     <span className="status-type">Active Internships</span>
                   </div>
                   <div className="item-status">
@@ -152,8 +212,8 @@ const DashBoard = () => {
                 </div>
               </div>
               <div className="project-boxes jsGridView" ref={projectsList}>
-                {allInternships &&
-                  allInternships.map((internship) => {
+                {activeInternships &&
+                  activeInternships.map((internship) => {
                     return (
                       <InternshipCard
                         key={internship._id}
@@ -161,7 +221,7 @@ const DashBoard = () => {
                       />
                     );
                   })}
-                {(!allInternships || allInternships.length === 0) && (
+                {(!activeInternships || activeInternships.length === 0) && (
                   <h2 style={{ marginBottom: 15, color: "var(--main-color)" }}>
                     No Internship Posted Yet!! Click on the Add Internship
                     Button available on the Navbar to get the Best Interns
@@ -173,6 +233,11 @@ const DashBoard = () => {
           </div>
         </div>
       </div>
+</>
+      )
+    }
+    {/* <Loader /> */}
+      
     </>
   );
 };

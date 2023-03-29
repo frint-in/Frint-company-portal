@@ -6,6 +6,7 @@ import { Delete, Edit } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import DraggableDialog from "../alert/Alert";
 
 const InternshipCard = (props) => {
   const { currentUser } = useSelector((state) => state.user);
@@ -14,11 +15,21 @@ const InternshipCard = (props) => {
   const navigate = useNavigate();
   const infoBtn = useRef();
 
-  const [applicantsNo, setApplicantsNo] = useState(0)
+  const [open, setOpen] = React.useState(false);
 
-  const [initialDay, SetinitialDay] = useState()
-  const [initialMonth, setInitialMonth] = useState()
-  const [initialYear, setInitialYear] = useState()
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const [applicantsNo, setApplicantsNo] = useState(0);
+
+  const [initialDay, SetinitialDay] = useState();
+  const [initialMonth, setInitialMonth] = useState();
+  const [initialYear, setInitialYear] = useState();
 
   const week = ["Sun,", "Mon,", "Tue,", "Wed,", "Thurs,", "Fri,", "Sat,"];
   const months = [
@@ -37,22 +48,23 @@ const InternshipCard = (props) => {
   ];
 
   useEffect(() => {
-    SetinitialDay(new Date(internship.createdAt).getDate())
-    setInitialMonth(months[new Date(internship.createdAt).getMonth()])
-    setInitialYear(new Date(internship.createdAt).getFullYear())
-  }, [internship])
-  
-  const [percentageTime, setPercentageTime] = useState()
+    SetinitialDay(new Date(internship.createdAt).getDate());
+    setInitialMonth(months[new Date(internship.createdAt).getMonth()]);
+    setInitialYear(new Date(internship.createdAt).getFullYear());
+  }, [internship]);
+
+  const [percentageTime, setPercentageTime] = useState();
 
   useEffect(() => {
-    let initialTimeDifference = new Date(internship.lastDate).getTime() - new Date(internship.createdAt).getTime()
-    let finalTimeDifference = new Date(internship.lastDate).getTime() - new Date().getTime()
-    let initialSeconds = Math.floor((initialTimeDifference) / 1000);
-    let finalSeconds = Math.floor((finalTimeDifference) / 1000)
-    setPercentageTime(((initialSeconds - finalSeconds)/initialSeconds)*100)
-  }, [internship])
-  
-
+    let initialTimeDifference =
+      new Date(internship.lastDate).getTime() -
+      new Date(internship.createdAt).getTime();
+    let finalTimeDifference =
+      new Date(internship.lastDate).getTime() - new Date().getTime();
+    let initialSeconds = Math.floor(initialTimeDifference / 1000);
+    let finalSeconds = Math.floor(finalTimeDifference / 1000);
+    setPercentageTime(((initialSeconds - finalSeconds) / initialSeconds) * 100);
+  }, [internship]);
 
   const [color, setColor] = useState([
     "#fee4cb",
@@ -78,10 +90,9 @@ const InternshipCard = (props) => {
     },
   ];
 
-
   const handleDelete = async (e) => {
     e.preventDefault();
-
+    setOpen(false);
     const response = await axios.delete(
       `${host}/company/internship/delete/${internship._id}`,
       {
@@ -90,11 +101,8 @@ const InternshipCard = (props) => {
         },
       }
     );
-
     response && navigate(0);
   };
-
-
 
   return (
     <div className="project-box-wrapper">
@@ -106,7 +114,9 @@ const InternshipCard = (props) => {
         }}
       >
         <div className="project-box-header">
-          <span>{initialMonth} {initialDay}, {initialYear}</span>
+          <span>
+            {initialMonth} {initialDay}, {initialYear}
+          </span>
           <div className="more-wrapper">
             <button
               className="project-btn-more"
@@ -132,13 +142,21 @@ const InternshipCard = (props) => {
               </svg>
             </button>
             <ul className="moreInfo" ref={infoBtn}>
-            <li>
-               
-               <Link to={`/viewEntry/${internship._id}`} style={{textDecoration: 'none' , margin: '8px'}}>More Info</Link>
-           </li>
               <li>
-               
-                  <Link to={`/editListing/${internship._id}`} style={{textDecoration: 'none' , margin: '4px'}}>Edit Listing</Link>
+                <Link
+                  to={`/viewEntry/${internship._id}`}
+                  style={{ textDecoration: "none", margin: "8px" }}
+                >
+                  More Info
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={`/editListing/${internship._id}`}
+                  style={{ textDecoration: "none", margin: "4px" }}
+                >
+                  Edit Listing
+                </Link>
               </li>
             </ul>
           </div>
@@ -158,56 +176,35 @@ const InternshipCard = (props) => {
           <div className="box-progress-bar">
             <span
               className="box-progress"
-              style={{ width: `${percentageTime}%`, backgroundColor: "#ff942e" }}
+              style={{
+                width: `${percentageTime}%`,
+                backgroundColor: "#ff942e",
+              }}
             />
           </div>
           <p className="box-progress-percentage">{~~percentageTime}%</p>
         </div>
         <div className="project-box-footer">
           <div className="participants">
-            {/* <img
-                            src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
-                            alt="participant"
-                        />
-                        <img
-                            src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTB8fG1hbnxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"
-                            alt="participant"
-                        /> */}
-            {/* <button
-                            className="add-participant"
-                            style={{ color: "#ff942e" }}
-                        >
-                            
-                            <Edit />
-                        </button> */}
-            <button
-              className="add-participant"
-              style={{ color: "#ff942e" }}
+          
+            <DraggableDialog
+              styleBtn={{ color: "#ff942e" }}
+              name="add-participant"
               onClick={handleDelete}
-            >
-              <Delete />
-              {/* <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width={12}
-                                height={12}
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth={3}
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="feather feather-plus"
-                            >
-                                <path d="M12 5v14M5 12h14" />
-                            </svg> */}
-            </button>
+              content={<Delete />}
+              message="Are you sure you want to perform the action"
+              open={open}
+              handleClose={handleClose}
+              handleClickOpen={handleClickOpen}
+              handleConfirm={handleDelete}
+            />
           </div>
           <div className="days-left" style={{ color: "#ff942e" }}>
             {applicantsNo} Applicants
           </div>
         </div>
       </div>
-       {/* )} */}
+      {/* )} */}
     </div>
   );
 };

@@ -10,11 +10,13 @@ import { Select } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+import Loader from "../loader/Loader";
 
 const AddInternship = () => {
   const host = import.meta.env.VITE_HOST;
   const { currentUser } = useSelector((state) => state.user);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   // useEffect(() => {
   //   console.log(currentUser)
@@ -32,12 +34,14 @@ const AddInternship = () => {
     perks: "",
     stipend: "",
     availablePosts: "",
+    isActive: true,
   };
   const [creds, setCreds] = useState(initialValues);
   const [company, setCompany] = useState();
 
   const handelSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true)
 
     const response = await axios.post(
       `${host}/company/internship/new/`,
@@ -50,6 +54,8 @@ const AddInternship = () => {
         perks: creds.perks,
         stipend: creds.stipend,
         availablePosts: creds.availablePosts,
+        isActive: creds.isActive,
+        lastDate: creds.lastDate,
       },
       {
         headers: {
@@ -57,6 +63,7 @@ const AddInternship = () => {
         },
       }
     );
+    setIsLoading(false)
     response && navigate(0);
   };
 
@@ -65,161 +72,169 @@ const AddInternship = () => {
   }, []);
 
   return (
-    <div className="newInternship">
-      <input
-        type="checkbox"
-        name="showForm"
-        id="showForm"
-        className="showForm"
-      />
-      <div className="form">
-        <h2>Add Internship</h2>
-        <form onSubmit={handelSubmit}>
-          <div className="left section">
+    <>
+      {isLoading ? (
+        <>
+          {" "}
+          <Loader />{" "}
+        </>
+      ) : (
+        <>
+          <div className="newInternship">
             <input
-              type="text"
-              name="title"
-              placeholder="Title"
-              value={creds.title}
-              required
-              onChange={(e) =>
-                setCreds({
-                  ...creds,
-                  title: e.target.value,
-                })
-              }
+              type="checkbox"
+              name="showForm"
+              id="showForm"
+              className="showForm"
             />
-            <FormControl
-              variant="standard"
-              sx={{ m: 1, width: 120 }}
-            >
-              <InputLabel id="demo-simple-select-standard-label">
-                Type
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-standard-label"
-                id="demo-simple-select-standard"
-                value={creds.type}
-                onChange={(e) =>
-                  setCreds({
-                    ...creds,
-                    type: e.target.value,
-                  })
-                }
-                label="Age"
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value="Part-Time">Part-Time</MenuItem>
-                <MenuItem value="Full-Time">Full-Time</MenuItem>title
-              </Select>
+            <div className="form">
+              <h2>Add Internship</h2>
+              <form onSubmit={handelSubmit}>
+                <div className="left section">
+                  <input
+                    type="text"
+                    name="title"
+                    placeholder="Title"
+                    value={creds.title}
+                    required
+                    onChange={(e) =>
+                      setCreds({
+                        ...creds,
+                        title: e.target.value,
+                      })
+                    }
+                  />
+                  <FormControl variant="standard" sx={{ m: 1, width: 120 }}>
+                    <InputLabel id="demo-simple-select-standard-label">
+                      Type
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-standard-label"
+                      id="demo-simple-select-standard"
+                      value={creds.type}
+                      onChange={(e) =>
+                        setCreds({
+                          ...creds,
+                          type: e.target.value,
+                        })
+                      }
+                      label="Age"
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value="Part-Time">Part-Time</MenuItem>
+                      <MenuItem value="Full-Time">Full-Time</MenuItem>title
+                    </Select>
 
+                    <input
+                      type="date"
+                      id="dateSelector"
+                      value={creds.lastDate}
+                      onChange={(e) =>
+                        setCreds({
+                          ...creds,
+                          lastDate: e.target.value,
+                        })
+                      }
+                    />
+                  </FormControl>
+                  <input
+                    type="text"
+                    name="location"
+                    placeholder="Location"
+                    value={creds.location}
+                    required
+                    onChange={(e) =>
+                      setCreds({
+                        ...creds,
+                        location: e.target.value,
+                      })
+                    }
+                  />
+                  <input
+                    type="text"
+                    name="stipend"
+                    placeholder="Stipend"
+                    value={creds.stipend}
+                    required
+                    onChange={(e) =>
+                      setCreds({
+                        ...creds,
+                        stipend: e.target.value,
+                      })
+                    }
+                  />
+                  <input
+                    type="text"
+                    name="availablePosts"
+                    placeholder="Number Of Available Posts"
+                    value={creds.availablePosts}
+                    required
+                    onChange={(e) =>
+                      setCreds({
+                        ...creds,
+                        availablePosts: e.target.value,
+                      })
+                    }
+                  />
+                  <textarea
+                    name="perks"
+                    placeholder="Perks"
+                    value={creds.perks}
+                    required
+                    onChange={(e) =>
+                      setCreds({
+                        ...creds,
+                        perks: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div className="right section">
+                  <textarea
+                    name="description"
+                    placeholder="Description"
+                    // required=""
+                    value={creds.description}
+                    required
+                    onChange={(e) =>
+                      setCreds({
+                        ...creds,
+                        description: e.target.value,
+                      })
+                    }
+                  />
+                  <textarea
+                    name="requirements"
+                    placeholder="Requirements"
+                    value={creds.requirements}
+                    required
+                    onChange={(e) =>
+                      setCreds({
+                        ...creds,
+                        requirements: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <Button
+                  variant="outlined"
+                  type="submit"
+                  className="sendForm left"
+                >
+                  Submit
+                </Button>
 
-
-             <input type="date" id="dateSelector"
-             value={creds.lastDate}
-             onChange={(e) =>
-               setCreds({
-                 ...creds,
-                 lastDate: e.target.value,
-               })
-             }
-             />
-
-
-
-             
-            </FormControl>
-            <input
-              type="text"
-              name="location"
-              placeholder="Location"
-              value={creds.location}
-              required
-              onChange={(e) =>
-                setCreds({
-                  ...creds,
-                  location: e.target.value,
-                })
-              }
-            />
-            <input
-              type="text"
-              name="stipend"
-              placeholder="Stipend"
-              value={creds.stipend}
-              required
-              onChange={(e) =>
-                setCreds({
-                  ...creds,
-                  stipend: e.target.value,
-                })
-              }
-            />
-            <input
-              type="text"
-              name="availablePosts"
-              placeholder="Number Of Available Posts"
-              value={creds.availablePosts}
-              required
-              onChange={(e) =>
-                setCreds({
-                  ...creds,
-                  availablePosts: e.target.value,
-                })
-              }
-            />
-            <textarea
-              name="perks"
-              placeholder="Perks"
-              value={creds.perks}
-              required
-              onChange={(e) =>
-                setCreds({
-                  ...creds,
-                  perks: e.target.value,
-                })
-              }
-            />
+                <label htmlFor="showForm" className="closeFormLabel left label">
+                  Close
+                </label>
+              </form>
+            </div>
           </div>
-          <div className="right section">
-            <textarea
-              name="description"
-              placeholder="Description"
-              // required=""
-              value={creds.description}
-              required
-              onChange={(e) =>
-                setCreds({
-                  ...creds,
-                  description: e.target.value,
-                })
-              }
-            />
-            <textarea
-              name="requirements"
-              placeholder="Requirements"
-              value={creds.requirements}
-              required
-              onChange={(e) =>
-                setCreds({
-                  ...creds,
-                  requirements: e.target.value,
-                })
-              }
-            />
-          </div>
-          <Button variant="outlined" type="submit" className="sendForm left">
-            Submit
-          </Button>
-
-          <label htmlFor="showForm" className="closeFormLabel left label">
-            Close
-          </label>
-        </form>
-      </div>
-    </div>
+        </>
+      )}
+    </>
   );
 };
 

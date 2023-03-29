@@ -9,6 +9,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { ArrowBack } from "@mui/icons-material";
 import { useSelector } from "react-redux";
+import Loader from "../loader/Loader";
 
 const EditListing = () => {
   const host = import.meta.env.VITE_HOST;
@@ -19,6 +20,7 @@ const EditListing = () => {
   const { internshipId } = useParams();
 
   const [requiredInternship, setRequiredInternship] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   const initialValues = {
     title: "",
@@ -32,8 +34,10 @@ const EditListing = () => {
   };
   const [creds, setCreds] = useState(initialValues);
 
+
   useEffect(() => {
     const getRequiredInternship = async () => {
+      setIsLoading(true)
       const response = await axios.get(
         `${host}/company/internship/find/${internshipId}`,
         {
@@ -42,6 +46,7 @@ const EditListing = () => {
           },
         }
       );
+      setIsLoading(false)
       setRequiredInternship(response.data);
     };
 
@@ -74,6 +79,7 @@ const EditListing = () => {
     e.preventDefault();
 
     const updateInternship = async () => {
+      setIsLoading(true)
       const response = axios.put(
         `${host}/company/internship/edit/${internshipId}`,
         creds,
@@ -86,18 +92,25 @@ const EditListing = () => {
       return response
     };
     const response = updateInternship()
+    setIsLoading(false)
     response && navigate('/')
   };
 
 
   return (
-    <div className="editListing">
+    <>
+   {
+    isLoading ? (<Loader/>) : (
+      <>
+       <div className="editListing">
       <Link to="/" className="back-btn">
         <ArrowBack />
       </Link>
       <div className="container">
         <h1 className="title">Edit Internship Details</h1>
-        <form className="grid" onSubmit={handleSubmit}>
+        <form className="grid"
+         onSubmit={handleSubmit}
+         >
           <div className="form-group a">
             <label htmlFor="name">Title</label>
             <input
@@ -111,7 +124,7 @@ const EditListing = () => {
             {/* <label htmlFor="first-name">Type</label>
             <input id="first-name" type="text" /> */}
 
-            <FormControl>
+            <FormControl className="form-group ">
               <InputLabel id="demo-simple-select-helper-label">Type</InputLabel>
               <Select
                 labelId="demo-simple-select-helper-label"
@@ -152,10 +165,21 @@ const EditListing = () => {
               }
             />
           </div>
-          <div className="textarea-group">
+          <div className="form-group">
+            <label htmlFor="perks">Perks</label>
+            <textarea
+              id="perks"
+              rows={3}
+              // defaultValue={""}
+              value={creds.perks}
+              onChange={(e) => setCreds({ ...creds, perks: e.target.value })}
+            />
+          </div>
+          <div className="form-group">
             <label htmlFor="description">Description</label>
             <textarea
               id="description"
+              rows={3}
               // defaultValue={""}
               value={creds.description}
               onChange={(e) =>
@@ -172,31 +196,9 @@ const EditListing = () => {
               onChange={(e) => setCreds({ ...creds, stipend: e.target.value })}
             />
           </div>
+
           <div className="form-group">
-            <label htmlFor="perks">Perks</label>
-            <textarea
-              id="perks"
-              rows={3}
-              // defaultValue={""}
-              value={creds.perks}
-              onChange={(e) => setCreds({ ...creds, perks: e.target.value })}
-            />
-          </div>
-         
-          <div className="textarea-group">
-            <label htmlFor="requirements">Requirements</label>
-            <textarea
-              id="requirements"
-              // defaultValue={""}
-              value={creds.requirements}
-              onChange={(e) =>
-                setCreds({ ...creds, requirements: e.target.value })
-              }
-            />
-          </div>
-          <div className="button-container">
-             <div className="date-picker" style={{display: 'flex'}}>
-            <label htmlFor="dateSelector" className="dateSelector">Deadline</label>
+            <label htmlFor="stipend">Deadline</label>
             <input type="date" className="dateSelector"
              value={new Date(creds.lastDate)}
              onChange={(e) =>
@@ -207,9 +209,36 @@ const EditListing = () => {
              }
              />
           </div>
-            <button className="button">Update Now</button>
+
+         
+          <div className="form-group">
+            <label htmlFor="requirements">Requirements</label>
+            <textarea
+              id="requirements"
+              rows={3}
+              // defaultValue={""}
+              value={creds.requirements}
+              onChange={(e) =>
+                setCreds({ ...creds, requirements: e.target.value })
+              }
+            />
           </div>
         </form>
+          <div className="button-container">
+             {/* <div className="date-picker" style={{display: 'flex'}}>
+            <label htmlFor="dateSelector" className="dateSelector">Deadline</label>
+            <input type="date" className="dateSelector"
+             value={new Date(creds.lastDate)}
+             onChange={(e) =>
+               setCreds({
+                 ...creds,
+                 lastDate: e.target.value,
+               })
+             }
+             />
+          </div> */}
+            <button className="button" onClick={handleSubmit}>Update Now</button>
+          </div>
         {/* <div className="checkboxes">
           <div className="checkbox-group">
             <input id="newsletter" type="checkbox" />
@@ -226,6 +255,11 @@ const EditListing = () => {
         </div> */}
       </div>
     </div>
+      </>
+    )
+   } 
+    </>
+   
   );
 };
 

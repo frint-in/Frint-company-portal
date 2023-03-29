@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import "./navbar.scss";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const host = import.meta.env.VITE_HOST;
   const { currentUser } = useSelector((state) => state.user);
   const [requiredUser, setRequiredUser] = useState([])
+
+  const navigate = useNavigate()
+
   useEffect(() => {
     const getRequiredUser = async () =>{
       const response = await axios.get(
@@ -128,7 +132,7 @@ const Navbar = () => {
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
           </button> */}
-          <button className="profile-btn">
+          <button className="profile-btn" onClick={()=>{navigate('/settings')}} >
             <img src={`${requiredUser.companyLogo ? requiredUser.companyLogo : (requiredUser.profilePic ? requiredUser.profilePic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png')}`} />
             <span>{requiredUser.CompanyName ? requiredUser.CompanyName : requiredUser.Name}</span>
           </button>

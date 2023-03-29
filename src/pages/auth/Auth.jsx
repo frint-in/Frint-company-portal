@@ -8,6 +8,8 @@ import { useDispatch } from "react-redux";
 import { loginFailure, loginStart, loginSuccess } from "../../redux/userSlice";
 import { auth, provider } from "../../firebase";
 import { signInWithPopup } from "firebase/auth";
+import Loader from "../../components/loader/Loader";
+import { Link } from "react-router-dom";
 
 const Auth = () => {
   const authToggler = useRef();
@@ -20,9 +22,10 @@ const Auth = () => {
     message: "",
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const formButton = useRef();
 
- 
   // Handle Registration Process
 
   const initialValues = {
@@ -42,10 +45,12 @@ const Auth = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
+      setIsLoading(true);
       const response = await axios.post(
         `${host}/auth/company/register`,
         registerFormValues
       );
+      setIsLoading(false);
     } catch (error) {
       setAlert({
         type: "error",
@@ -68,6 +73,7 @@ const Auth = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     dispatch(loginStart());
     try {
       const res = await axios.post(`${host}/auth/company/login`, {
@@ -85,6 +91,7 @@ const Auth = () => {
       });
       dispatch(loginFailure());
     }
+    setIsLoading(false);
   };
 
   // ============= Auth =============
@@ -111,81 +118,107 @@ const Auth = () => {
   };
 
   return (
-   
     <>
-      <section className="auth">
-        <div className="container" ref={authToggler}>
-          <div className="user signinBx">
-            <div className="imgBx">
-              <img
-                src="/auth2.jpg"
-                alt=""
-                style={{objectFit: 'cover', borderRight: '1px solid grey'}}
-              />
-            </div>
-            <div className="formBx">
-              <form action="" onsubmit="return false;">
-                <h2>Sign In</h2>
-                <input
-                        type="email"
-                        name="email"
-                        placeholder="Email"
-                        value={loginFormValues.Email}
-                        onChange={(e) =>
-                          setLoginFormValues({
-                            ...loginFormValues,
-                            Email: e.target.value,
-                          })
-                        }
-                      />
-                <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        value={loginFormValues.Password}
-                        onChange={(e) =>
-                          setLoginFormValues({
-                            ...loginFormValues,
-                            Password: e.target.value,
-                          })
-                        }
-                      />
-                <input type="submit"  onClick={handleLogin} name="" defaultValue="Login" />
-                <p
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <section className="auth">
+            <div className="container" ref={authToggler}>
+              <div className="user signinBx">
+                <div className="imgBx">
+                  <img
+                    src="/auth2.jpg"
+                    alt=""
                     style={{
-                      textAlign: "center",
-                      paddingTop: 10,
-                      fontSize: "1.2em",
+                      objectFit: "cover",
+                      borderRight: "1px solid grey",
                     }}
-                  >
-                    Or
-                  </p>
-                  <button
-                    type="button"
-                    onClick={google}
-                    className="google-login social-login"
-                  >
-                    Login With Google <Google />
-                  </button>
-                <p className="signup">
-                  Don't have an account ?
-                  <a
-                    href="#"
-                    onClick={() =>
-                      authToggler.current.classList.toggle("active")
-                    }
-                  >
-                    Sign Up.
-                  </a>
-                </p>
-              </form>
-            </div>
-          </div>
-          <div className="user signupBx">
-            <div className="formBx">
-              <form action="" onsubmit="return false;">
-                <h2>Create an account</h2>
-                <input
+                  />
+                </div>
+                <div className="formBx">
+                  <form action="" onsubmit="return false;">
+                    <h2>Sign In</h2>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Email"
+                      value={loginFormValues.Email}
+                      onChange={(e) =>
+                        setLoginFormValues({
+                          ...loginFormValues,
+                          Email: e.target.value,
+                        })
+                      }
+                    />
+                    <input
+                      type="password"
+                      name="password"
+                      placeholder="Password"
+                      value={loginFormValues.Password}
+                      onChange={(e) =>
+                        setLoginFormValues({
+                          ...loginFormValues,
+                          Password: e.target.value,
+                        })
+                      }
+                    />
+                    <p style={{margin: '10px'}} >
+                      <Link to="/forgot-password">Forgot password ?</Link>
+                    </p>
+                    <input
+                      type="submit"
+                      onClick={handleLogin}
+                      name=""
+                      defaultValue="Login"
+                    />
+                    <p
+                      style={{
+                        textAlign: "center",
+                        paddingTop: 10,
+                        fontSize: "1.2em",
+                      }}
+                    >
+                      Or
+                    </p>
+                    <button
+                      type="button"
+                      onClick={google}
+                      className="google-login social-login"
+                    >
+                      Login With Google <Google />
+                    </button>
+                    <p className="signup">
+                      Don't have an account ? &nbsp;
+                      <a
+                        href="#"
+                        onClick={() =>
+                          authToggler.current.classList.toggle("active")
+                        }
+                      >
+                        Sign Up.
+                      </a>
+                    </p>
+                  </form>
+                </div>
+              </div>
+              <div className="user signupBx">
+                <div className="formBx">
+                  <form action="" onsubmit="return false;">
+                    <h2>Create an account</h2>
+                    <input
+                      type="text"
+                      name="companyName"
+                      placeholder="Your Company Name"
+                      value={registerFormValues.CompanyName}
+                      onChange={(e) =>
+                        setRegisterFormValues({
+                          ...registerFormValues,
+                          CompanyName: e.target.value,
+                        })
+                      }
+                    />
+                    <input
                   type="text"
                   name="name"
                   placeholder="Your Name"
@@ -197,85 +230,91 @@ const Auth = () => {
                     })
                   }
                 />
-                <input type="email" name="" placeholder="Email Address" />
-                <input
-                        type="text"
-                        name="designation"
-                        placeholder="Your Designations"
-                        value={registerFormValues.Designation}
-                        onChange={(e) =>
-                          setRegisterFormValues({
-                            ...registerFormValues,
-                            Designation: e.target.value,
-                          })
+                    
+                    <input
+                      type="text"
+                      name="designation"
+                      placeholder="Your Designations"
+                      value={registerFormValues.Designation}
+                      onChange={(e) =>
+                        setRegisterFormValues({
+                          ...registerFormValues,
+                          Designation: e.target.value,
+                        })
+                      }
+                    />
+                    <input
+                      type="email"
+                      name="Email"
+                      placeholder="Enter Your Email"
+                      value={registerFormValues.Email}
+                      onChange={(e) =>
+                        setRegisterFormValues({
+                          ...registerFormValues,
+                          Email: e.target.value,
+                        })
+                      }
+                    />
+                    <input
+                      type="password"
+                      name="password"
+                      placeholder="Create Password"
+                      value={registerFormValues.Password}
+                      onChange={(e) =>
+                        setRegisterFormValues({
+                          ...registerFormValues,
+                          Password: e.target.value,
+                        })
+                      }
+                    />
+                    {/* <input type="password" name="" placeholder="Confirm Password" /> */}
+                    <input
+                      type="submit"
+                      name=""
+                      onClick={handleRegister}
+                      defaultValue="Sign Up"
+                    />
+                    <p
+                      style={{
+                        textAlign: "center",
+                        paddingTop: 10,
+                        fontSize: "1.2em",
+                      }}
+                    >
+                      Or
+                    </p>
+                    <button
+                      type="button"
+                      onClick={google}
+                      className="google-login social-login"
+                    >
+                      Sign-Up With Google <Google />
+                    </button>
+                    <p className="signup">
+                      Already have an account ? &nbsp;
+                      <a
+                        href="#"
+                        onClick={() =>
+                          authToggler.current.classList.toggle("active")
                         }
-                      />
-                      <input
-                        type="email"
-                        name="Email"
-                        placeholder="Enter Your Email"
-                        value={registerFormValues.Email}
-                        onChange={(e) =>
-                          setRegisterFormValues({
-                            ...registerFormValues,
-                            Email: e.target.value,
-                          })
-                        }
-                      />
-                     <input
-                        type="password"
-                        name="password"
-                        placeholder="Create Password"
-                        value={registerFormValues.Password}
-                        onChange={(e) =>
-                          setRegisterFormValues({
-                            ...registerFormValues,
-                            Password: e.target.value,
-                          })
-                        }
-                      />
-                {/* <input type="password" name="" placeholder="Confirm Password" /> */}
-                <input type="submit" name="" onClick={handleRegister} defaultValue="Sign Up" />
-                <p
-                    style={{
-                      textAlign: "center",
-                      paddingTop: 10,
-                      fontSize: "1.2em",
-                    }}
-                  >
-                    Or
-                  </p>
-                  <button
-                    type="button"
-                    onClick={google}
-                    className="google-login social-login"
-                  >
-                    Sign-Up With Google <Google />
-                  </button>
-                <p className="signup">
-                  Already have an account ?
-                  <a
-                    href="#"
-                    onClick={() =>
-                      authToggler.current.classList.toggle("active")
-                    }
-                  >
-                    Sign in.
-                  </a>
-                </p>
-              </form>
+                      >
+                        Sign in.
+                      </a>
+                    </p>
+                  </form>
+                </div>
+                <div className="imgBx">
+                  <img
+                    src="/auth1.jpg"
+                    alt=""
+                    style={{ objectFit: "cover", borderLeft: "1px solid grey" }}
+                  />
+                </div>
+              </div>
             </div>
-            <div className="imgBx">
-              <img
-                src="/auth1.jpg"
-                alt=""
-                style={{objectFit: 'cover', borderLeft: '1px solid grey'}}
-              />
-              
-            </div>
-          </div>
-        </div>
-      </section>
+          </section>
+        </>
+      )}
     </>
   );
 };

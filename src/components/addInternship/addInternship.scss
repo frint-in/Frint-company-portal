@@ -208,9 +208,12 @@ $BP: 35em;
 
     #dateSelector{
       margin: 20px 0;
-      border: none;
-      background-color: rgb(243,246,253);
+      border: 0.1px solid rgb(225, 230, 235);
+      border-radius: 10px;
+      background-color: #fff;
       outline: none;
+      padding: 10px 0;
+      width: 150px;
     }
     
     .showFormLabel {
