@@ -9,14 +9,18 @@ const ForgotPassword = () => {
   const [msg, setMsg] = useState("");
   const [error, setError] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
+      setIsLoading(true);
 			const url = `${host}/company/password`;
 			const { data } = await axios.post(url, { Email: email });
 			setMsg(data.message);
 			setError("");
+      setIsLoading(true);
 		} catch (error) {
 			if (
 				error.response &&

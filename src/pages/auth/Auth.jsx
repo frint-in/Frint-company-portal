@@ -137,7 +137,7 @@ const Auth = () => {
                   />
                 </div>
                 <div className="formBx">
-                  <form action="" onsubmit="return false;">
+                  <form >
                     <h2>Sign In</h2>
                     <input
                       type="email"
@@ -204,7 +204,7 @@ const Auth = () => {
               </div>
               <div className="user signupBx">
                 <div className="formBx">
-                  <form action="" onsubmit="return false;">
+                  <form >
                     <h2>Create an account</h2>
                     <input
                       type="text"

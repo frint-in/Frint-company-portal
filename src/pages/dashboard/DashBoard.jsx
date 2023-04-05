@@ -44,12 +44,14 @@ const DashBoard = () => {
 
   useEffect(() => {
     const getAllCompanyInternship = async () => {
+      setIsLoading(true)
         const res = await axios.get(`${host}/company/internship/all`,
         {
           headers: {
             authorization: `Bearer ${currentUser.token}`,
           },
         })
+        setIsLoading(false)
         setAllInternships(res.data)
     };
     currentUser && getAllCompanyInternship();
@@ -57,6 +59,7 @@ const DashBoard = () => {
 
 
   const updateInternship = async (internshipId, boolValue) => {
+    setIsLoading(true)
     const response = axios.put(
       `${host}/company/internship/edit/${internshipId}`,
       {isActive: boolValue},
@@ -66,6 +69,7 @@ const DashBoard = () => {
         },
       }
     );
+    setIsLoading(false)
     return response
   };
 

@@ -9,10 +9,13 @@ const Navbar = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [requiredUser, setRequiredUser] = useState([])
 
+  const [isLoading, setIsLoading] = useState(false)
+
   const navigate = useNavigate()
 
   useEffect(() => {
     const getRequiredUser = async () =>{
+      setIsLoading(true)
       const response = await axios.get(
         `${host}/company/info/get`,
         {
@@ -21,6 +24,7 @@ const Navbar = () => {
           },
         }
       );
+      setIsLoading(false)
       setRequiredUser(response.data)
     }
     getRequiredUser()

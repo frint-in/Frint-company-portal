@@ -16,11 +16,15 @@ const PasswordReset = () => {
 	const param = useParams();
 	const url = `${host}/company/password/${param.id}/${param.token}`;
 
+	const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
 		const verifyUrl = async () => {
 			try {
+				setIsLoading(true);
 				await axios.get(url);
 				setValidUrl(true);
+				setIsLoading(false);
 			} catch (error) {
 				setValidUrl(false);
 			}
@@ -31,10 +35,12 @@ const PasswordReset = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
+			setIsLoading(true);
 			const { data } = await axios.post(url, { Password: password });
 			setMsg(data.message);
 			setError("");
 			// window.location = "/login";
+			setIsLoading(false);
 			navigate('/auth')
 		} catch (error) {
 			if (
