@@ -45,12 +45,10 @@ const Auth = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      setIsLoading(true);
       const response = await axios.post(
         `${host}/auth/company/register`,
         registerFormValues
       );
-      setIsLoading(false);
     } catch (error) {
       setAlert({
         type: "error",
@@ -73,7 +71,6 @@ const Auth = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     dispatch(loginStart());
     try {
       const res = await axios.post(`${host}/auth/company/login`, {
@@ -91,7 +88,6 @@ const Auth = () => {
       });
       dispatch(loginFailure());
     }
-    setIsLoading(false);
   };
 
   // ============= Auth =============
@@ -123,6 +119,11 @@ const Auth = () => {
         <Loader />
       ) : (
         <>
+          {alert.type && <Alert severity={alert.type}>{alert.message}</Alert>}
+          {/* <Alert severity="error">This is an error alert — check it out!</Alert> */}
+          {/* <Alert severity="success">
+     This is a success alert — check it out!
+     </Alert> */}
           <section className="auth">
             <div className="container" ref={authToggler}>
               <div className="user signinBx">
@@ -137,7 +138,7 @@ const Auth = () => {
                   />
                 </div>
                 <div className="formBx">
-                  <form >
+                  <form>
                     <h2>Sign In</h2>
                     <input
                       type="email"
@@ -163,7 +164,7 @@ const Auth = () => {
                         })
                       }
                     />
-                    <p style={{margin: '10px'}} >
+                    <p style={{ margin: "10px" }}>
                       <Link to="/forgot-password">Forgot password ?</Link>
                     </p>
                     <input
@@ -204,7 +205,7 @@ const Auth = () => {
               </div>
               <div className="user signupBx">
                 <div className="formBx">
-                  <form >
+                  <form>
                     <h2>Create an account</h2>
                     <input
                       type="text"
@@ -219,18 +220,18 @@ const Auth = () => {
                       }
                     />
                     <input
-                  type="text"
-                  name="name"
-                  placeholder="Your Name"
-                  value={registerFormValues.Name}
-                  onChange={(e) =>
-                    setRegisterFormValues({
-                      ...registerFormValues,
-                      Name: e.target.value,
-                    })
-                  }
-                />
-                    
+                      type="text"
+                      name="name"
+                      placeholder="Your Name"
+                      value={registerFormValues.Name}
+                      onChange={(e) =>
+                        setRegisterFormValues({
+                          ...registerFormValues,
+                          Name: e.target.value,
+                        })
+                      }
+                    />
+
                     <input
                       type="text"
                       name="designation"
