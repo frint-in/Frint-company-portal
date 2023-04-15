@@ -4,7 +4,7 @@ $high: #333;
 
 $BP: 35em;
 
-.newInternship, .editListing{
+.newInternship{
     
     h1,
     p {
@@ -128,6 +128,7 @@ $BP: 35em;
         resize: none;
         height: 10rem;
         line-height: 1.5rem;
+        height: 8.5em;
         
         @media (max-width: $BP) {
           height: 2.5rem;

@@ -347,7 +347,7 @@ const EditSettings = () => {
                         </div>
                         <div className="non-active-form">
                           {/* <p> */}
-                          <div className="fieldName">PhoneNumber :</div>
+                          <div className="fieldName">Phone Number :</div>
                           <div className="fieldValue">
                             <TextField
                               variant="standard"
@@ -364,7 +364,7 @@ const EditSettings = () => {
                         </div>
                         <div className="non-active-form">
                           {/* <p> */}
-                          <div className="fieldName">WhatsappNumber :</div>
+                          <div className="fieldName">Whatsapp Number :</div>
                           <div className="fieldValue">
                             <TextField
                               variant="standard"

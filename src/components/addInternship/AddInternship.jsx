@@ -178,7 +178,11 @@ const AddInternship = () => {
                       })
                     }
                   />
-                  <textarea
+                  
+                </div>
+                <div className="right section">
+
+                <textarea
                     name="perks"
                     placeholder="Perks"
                     value={creds.perks}
@@ -190,8 +194,6 @@ const AddInternship = () => {
                       })
                     }
                   />
-                </div>
-                <div className="right section">
                   <textarea
                     name="description"
                     placeholder="Description"
